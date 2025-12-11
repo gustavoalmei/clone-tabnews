@@ -14,7 +14,6 @@ async function status(req, res) {
     values: [dataBaseName],
   });
   const openedConectionsPostgresValue = openedConectionsPostgres.rows[0].count;
-  console.log(openedConectionsPostgresValue);
   res.status(200).json({
     updated_at: updatedAt,
     dependencies: {
