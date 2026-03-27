@@ -15,3 +15,15 @@ jobs:
       # o npm ci ira instalar nas mesmas versões que estão no package-lock.json,
       # já o npm install ira instalar as versões mais recentes dentro do range de versões definido no package.json
       - run: npm run lint:prettier:check # executa os testes
+  eslint: # nome do job
+    name: Run ESLint # nome do job que aparecerá no GitHub
+    runs-on: ubuntu-latest # ambiente onde o job será executado
+    steps:
+      - uses: actions/checkout@v4 # faz o checkout do código
+      - uses: actions/setup-node@v4 # configura o node
+        with:
+          node-version: "lts/hydrogen" # versão do node
+      - run: npm ci # instala as dependências
+      # o npm ci ira instalar nas mesmas versões que estão no package-lock.json,
+      # já o npm install ira instalar as versões mais recentes dentro do range de versões definido no package.json
+      - run: npm run lint:eslint:check # executa os testes
