@@ -27,3 +27,17 @@ jobs:
       # o npm ci ira instalar nas mesmas versões que estão no package-lock.json,
       # já o npm install ira instalar as versões mais recentes dentro do range de versões definido no package.json
       - run: npm run lint:eslint:check # executa os testes
+  commitlint: # nome do job
+    name: Run Commitlint # nome do job que aparecerá no GitHub
+    runs-on: ubuntu-latest # ambiente onde o job será executado
+    steps:
+      - uses: actions/checkout@v4 # faz o checkout do código
+        with:
+          fetch-depth: 0 # faz o checkout de todos os commits
+      - uses: actions/setup-node@v4 # configura o node
+        with:
+          node-version: "lts/hydrogen" # versão do node
+      - run: npm ci # instala as dependências
+      # o npm ci ira instalar nas mesmas versões que estão no package-lock.json,
+      # já o npm install ira instalar as versões mais recentes dentro do range de versões definido no package.json
+      - run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
