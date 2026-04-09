@@ -1,1 +1,12 @@
-npm run scan:secrets
+#!/bin/sh
+
+echo "🔍 Verificando secrets no código..."
+
+npx secretlint "**/*" || {
+  echo ""
+  echo "🚨 COMMIT BLOQUEADO: Secrets encontradas no código!"
+  echo "   Remova as chaves/tokens antes de commitar."
+  exit 1
+}
+
+echo "✅ Nenhuma secret encontrada."
