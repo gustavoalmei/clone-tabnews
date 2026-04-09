@@ -1,8 +1,6 @@
 import migrationRunner from "node-pg-migrate";
 import { join } from "node:path";
 import database from "infra/database";
-const AWSAccessKeyId = 'AKIAXYZ123FAKEKEY456'
-const AWSSecretAccessKey = 'abc123XYZfakeKEY/abc+xyz/ABCDEFGHIJKLMN'
 
 export default async function migrations(req, res) {
   const allowMethods = ["GET", "POST"];
