@@ -22,7 +22,7 @@ export default function StatusPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function UpdateAt() {
@@ -30,7 +30,7 @@ function UpdateAt() {
     refreshInterval: 2000,
   });
 
-  let updatedAtText = 'Carregando...';
+  let updatedAtText = "Carregando...";
   if (!isLoading && data) {
     updatedAtText = new Date(data.updated_at).toLocaleString();
   }
@@ -39,7 +39,7 @@ function UpdateAt() {
     <div className="text-sm text-gray-500">
       Última atualização: {updatedAtText}
     </div>
-  )
+  );
 }
 
 function DataBaseStatus() {
@@ -47,21 +47,21 @@ function DataBaseStatus() {
     refreshInterval: 2000,
   });
 
-  let statusText = 'Carregando...';
-  let colorStatus = 'text-gray-500';
+  let statusText = "Carregando...";
+  let colorStatus = "text-gray-500";
   if (!isLoading && data) {
-    statusText = data.dependencies.database.version ? 'Online' : 'Offline';
-    colorStatus = data.dependencies.database.version ? 'text-green-500' : 'text-red-500';
+    statusText = data.dependencies.database.version ? "Online" : "Offline";
+    colorStatus = data.dependencies.database.version
+      ? "text-green-500"
+      : "text-red-500";
   }
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">
-      <spam>
-        Status do banco de dados:
-      </spam>
+      <spam>Status do banco de dados:</spam>
       <span className={`${colorStatus} font-bold`}>{statusText}</span>
-    </div >
-  )
+    </div>
+  );
 }
 
 function DataBaseVersion() {
@@ -69,19 +69,17 @@ function DataBaseVersion() {
     refreshInterval: 2000,
   });
 
-  let versionText = 'Carregando...';
+  let versionText = "Carregando...";
   if (!isLoading && data) {
     versionText = data.dependencies.database.version;
   }
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">
-      <spam>
-        Versão do banco de dados:
-      </spam>
+      <spam>Versão do banco de dados:</spam>
       <span className="font-bold">{versionText}</span>
     </div>
-  )
+  );
 }
 
 function OpenConnections() {
@@ -89,19 +87,17 @@ function OpenConnections() {
     refreshInterval: 2000,
   });
 
-  let openedConnectionsText = 'Carregando...';
+  let openedConnectionsText = "Carregando...";
   if (!isLoading && data) {
     openedConnectionsText = data.dependencies.database.opened_conections;
   }
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">
-      <spam>
-        Conexões abertas:
-      </spam>
+      <spam>Conexões abertas:</spam>
       <span className="font-bold">{openedConnectionsText}</span>
     </div>
-  )
+  );
 }
 
 function MaxConnections() {
@@ -109,17 +105,15 @@ function MaxConnections() {
     refreshInterval: 2000,
   });
 
-  let maxConnectionsText = 'Carregando...';
+  let maxConnectionsText = "Carregando...";
   if (!isLoading && data) {
     maxConnectionsText = data.dependencies.database.max_connections;
   }
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">
-      <spam>
-        Conexões máximas:
-      </spam>
+      <spam>Conexões máximas:</spam>
       <span className="font-bold">{maxConnectionsText}</span>
     </div>
-  )
+  );
 }
