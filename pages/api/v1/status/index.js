@@ -3,7 +3,6 @@ import { InternalServerError } from "infra/errors";
 
 async function status(req, res) {
   try {
-
     const updatedAt = new Date().toISOString();
 
     const versionPostgres = await database.query("show server_version;");
@@ -16,7 +15,8 @@ async function status(req, res) {
       text: "select count(*)::int from pg_stat_activity where datname = $1;",
       values: [dataBaseName],
     });
-    const openedConectionsPostgresValue = openedConectionsPostgres.rows[0].count;
+    const openedConectionsPostgresValue =
+      openedConectionsPostgres.rows[0].count;
     res.status(200).json({
       updated_at: updatedAt,
       dependencies: {
@@ -27,13 +27,12 @@ async function status(req, res) {
         },
       },
     });
-  }
-  catch (error) {
+  } catch (error) {
     const publicErrorObject = new InternalServerError({
       cause: error,
-    })
+    });
 
-    console.log(`\n Erro dentro do catch do controller`)
+    console.log(`\n Erro dentro do catch do controller`);
     console.error(publicErrorObject);
     res.status(500).json(publicErrorObject);
   }
