@@ -26,7 +26,7 @@ async function getHandler(req, res) {
 
     const peddingMigrations = await migrationRunner({
       ...DefaultMigrations,
-      dbClient
+      dbClient,
     });
     return res.status(200).json(peddingMigrations);
   } finally {

@@ -21,8 +21,7 @@ async function getHandler(req, res) {
     text: "select count(*)::int from pg_stat_activity where datname = $1;",
     values: [dataBaseName],
   });
-  const openedConectionsPostgresValue =
-    openedConectionsPostgres.rows[0].count;
+  const openedConectionsPostgresValue = openedConectionsPostgres.rows[0].count;
   res.status(200).json({
     updated_at: updatedAt,
     dependencies: {
