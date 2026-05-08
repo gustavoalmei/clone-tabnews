@@ -27,17 +27,17 @@ exports.up = (pgm) => {
 
     // The timestamp with time zone type is used to store the creation date of the user.
     create_at: {
-      type: 'timestamptz',
+      type: "timestamptz",
       notNull: true,
       default: pgm.func("timezone('utc', now())"),
     },
 
     updated_at: {
-      type: 'timestamptz',
+      type: "timestamptz",
       notNull: true,
       default: pgm.func("timezone('utc', now())"),
     },
-  })
+  });
 };
 
 exports.down = false;

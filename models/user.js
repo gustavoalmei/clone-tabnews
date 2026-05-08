@@ -24,7 +24,7 @@ async function findOneByUsername(username) {
     if (result.rowCount === 0) {
       throw new NotFoundError({
         message: "Usuário não encontrado.",
-        action: 'Verifique se o nome de usuário está digitado corretamente.'
+        action: "Verifique se o nome de usuário está digitado corretamente.",
       });
     }
 
@@ -54,7 +54,7 @@ async function create(userInputValues) {
     if (result.rowCount > 0) {
       throw new ValidationError({
         message: "O nome de usuário informado já está sendo utilizado.",
-        action: "Utilize outro nome de usuário para realizar o cadastro."
+        action: "Utilize outro nome de usuário para realizar o cadastro.",
       });
     }
   }
@@ -74,7 +74,7 @@ async function create(userInputValues) {
     if (result.rowCount > 0) {
       throw new ValidationError({
         message: "O email informado já está sendo utilizado.",
-        action: "Utilize outro email para realizar o cadastro."
+        action: "Utilize outro email para realizar o cadastro.",
       });
     }
   }
@@ -92,7 +92,7 @@ async function create(userInputValues) {
       values: [
         userInputValues.username,
         userInputValues.email,
-        userInputValues.password
+        userInputValues.password,
       ],
     });
     return result.rows[0];
@@ -101,7 +101,7 @@ async function create(userInputValues) {
 
 const user = {
   create,
-  findOneByUsername
-}
+  findOneByUsername,
+};
 
 export default user;
