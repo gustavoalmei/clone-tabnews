@@ -1,6 +1,6 @@
 import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
-import session from 'models/session';
+import session from "models/session";
 import setCookieParser from "set-cookie-parser";
 
 beforeAll(async () => {
@@ -91,7 +91,7 @@ describe("POST /api/v1/sessions", () => {
 
     test("With correct 'email' and correct 'password'", async () => {
       const createdUser = await orchestrator.createUser({
-        email: 'tudocorreto@tabnews.com',
+        email: "tudocorreto@tabnews.com",
         password: "senha-correta",
       });
 
@@ -101,7 +101,7 @@ describe("POST /api/v1/sessions", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: 'tudocorreto@tabnews.com',
+          email: "tudocorreto@tabnews.com",
           password: "senha-correta",
         }),
       });
@@ -115,7 +115,7 @@ describe("POST /api/v1/sessions", () => {
         user_id: createdUser.id,
         expires_at: responseBody.expires_at,
         create_at: responseBody.create_at,
-        updated_at: responseBody.updated_at
+        updated_at: responseBody.updated_at,
       });
 
       expect(uuidVersion(responseBody.id)).toBe(4);
@@ -130,16 +130,16 @@ describe("POST /api/v1/sessions", () => {
       expect(expiresAt - createdAt).toBe(session.EXPIRATION_IN_MILLISECONDS);
 
       const parsedSetCookie = setCookieParser(response, {
-        map: true
+        map: true,
       });
 
       expect(parsedSetCookie.session_id).toEqual({
-        name: 'session_id',
+        name: "session_id",
         value: responseBody.token,
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
         path: "/",
-        httpOnly: true
-      })
+        httpOnly: true,
+      });
     });
   });
 });
