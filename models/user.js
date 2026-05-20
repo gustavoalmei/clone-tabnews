@@ -33,6 +33,38 @@ async function findOneByUsername(username) {
   }
 }
 
+async function findOneByEmail(email) {
+  const userFound = await runSelectQuery(email);
+
+  return userFound;
+
+  async function runSelectQuery(email) {
+    const result = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        LOWER(email) = LOWER($1)
+      LIMIT
+        1
+      ;`,
+      values: [email],
+    });
+
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        message: "Credenciais inválidas.",
+        action: "Verifique seu email e senha.",
+        status_code: 401,
+      });
+    }
+
+    return result.rows[0];
+  }
+}
+
 async function create(userInputValues) {
   await validateUniqueEmail(userInputValues.email);
   await validateUniqueUsername(userInputValues.username);
@@ -158,6 +190,7 @@ async function hashPasswordInObject(userInputValues) {
 const user = {
   create,
   findOneByUsername,
+  findOneByEmail,
   update,
 };
 
