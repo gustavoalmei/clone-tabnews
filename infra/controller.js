@@ -3,7 +3,6 @@ import {
   MethodNotAllowedError,
   ValidationError,
   NotFoundError,
-
   UnauthorizedError,
 } from "infra/errors";
 import * as cookie from "cookie";
@@ -46,6 +45,6 @@ const controller = {
     onNoMatch: onNoMatchHandler,
     onError: onErrorHandler,
   },
-  setSessionCookie
+  setSessionCookie,
 };
 export default controller;

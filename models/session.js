@@ -5,9 +5,9 @@ import { UnauthorizedError } from "infra/errors";
 const EXPIRATION_IN_MILLISECONDS = 60 * 60 * 24 * 30 * 1000; // 30 days
 
 async function findOneValidByToken(token) {
-  const sessionFound = await reunSelectQuery(token)
+  const sessionFound = await reunSelectQuery(token);
 
-  return sessionFound
+  return sessionFound;
 
   async function reunSelectQuery(token) {
     const result = await database.query({
@@ -66,7 +66,6 @@ async function renew(sessionId) {
   const result = await runUpdateQuery(sessionId, expiresAt);
   return result;
 
-
   async function runUpdateQuery(sessionId, expiresAt) {
     const result = await database.query({
       text: `
@@ -90,7 +89,7 @@ const session = {
   create,
   EXPIRATION_IN_MILLISECONDS,
   findOneValidByToken,
-  renew
+  renew,
 };
 
 export default session;

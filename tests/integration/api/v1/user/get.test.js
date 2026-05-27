@@ -21,7 +21,7 @@ describe("GET /api/v1/user", () => {
       const response2 = await fetch("http://localhost:3000/api/v1/user", {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
-        }
+        },
       });
 
       expect(response2.status).toBe(200);
@@ -41,10 +41,16 @@ describe("GET /api/v1/user", () => {
       expect(Date.parse(responseBody2.create_at)).not.toBeNaN();
       expect(Date.parse(responseBody2.updated_at)).not.toBeNaN();
 
-      const renewedSessionObject = await session.findOneValidByToken(sessionObject.token);
+      const renewedSessionObject = await session.findOneValidByToken(
+        sessionObject.token,
+      );
 
-      expect(renewedSessionObject.expires_at > sessionObject.expires_at).toBe(true);
-      expect(renewedSessionObject.updated_at > sessionObject.updated_at).toBe(true);
+      expect(renewedSessionObject.expires_at > sessionObject.expires_at).toBe(
+        true,
+      );
+      expect(renewedSessionObject.updated_at > sessionObject.updated_at).toBe(
+        true,
+      );
 
       const parsedSetCookie = setCookieParser(response2, {
         map: true,
@@ -63,7 +69,7 @@ describe("GET /api/v1/user", () => {
       const response2 = await fetch("http://localhost:3000/api/v1/user", {
         headers: {
           Cookie: `session_id=7ffb3ff2-bafc-4768-b98d-9972eacb6747`,
-        }
+        },
       });
 
       expect(response2.status).toBe(401);
@@ -81,7 +87,7 @@ describe("GET /api/v1/user", () => {
     test("With expired session", async () => {
       jest.useFakeTimers({
         now: new Date(Date.now() - session.EXPIRATION_IN_MILLISECONDS),
-      })
+      });
       const createUser = await orchestrator.createUser({
         username: "userWithExpiredSession",
       });
@@ -93,7 +99,7 @@ describe("GET /api/v1/user", () => {
       const response2 = await fetch("http://localhost:3000/api/v1/user", {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
-        }
+        },
       });
 
       expect(response2.status).toBe(401);
@@ -110,7 +116,9 @@ describe("GET /api/v1/user", () => {
 
     test("With when the session is less than 1 minute to expire", async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - (session.EXPIRATION_IN_MILLISECONDS - 60 * 1000)),
+        now: new Date(
+          Date.now() - (session.EXPIRATION_IN_MILLISECONDS - 60 * 1000),
+        ),
       });
 
       const createUser = await orchestrator.createUser({
@@ -124,7 +132,7 @@ describe("GET /api/v1/user", () => {
       const response2 = await fetch("http://localhost:3000/api/v1/user", {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
-        }
+        },
       });
 
       expect(response2.status).toBe(200);
@@ -144,10 +152,16 @@ describe("GET /api/v1/user", () => {
       expect(Date.parse(responseBody2.create_at)).not.toBeNaN();
       expect(Date.parse(responseBody2.updated_at)).not.toBeNaN();
 
-      const renewedSessionObject = await session.findOneValidByToken(sessionObject.token);
+      const renewedSessionObject = await session.findOneValidByToken(
+        sessionObject.token,
+      );
 
-      expect(renewedSessionObject.expires_at > sessionObject.expires_at).toBe(true);
-      expect(renewedSessionObject.updated_at > sessionObject.updated_at).toBe(true);
+      expect(renewedSessionObject.expires_at > sessionObject.expires_at).toBe(
+        true,
+      );
+      expect(renewedSessionObject.updated_at > sessionObject.updated_at).toBe(
+        true,
+      );
 
       const parsedSetCookie = setCookieParser(response2, {
         map: true,

@@ -41,8 +41,8 @@ async function createUser(objectUser) {
   });
 }
 
-async function createSession(userId){
-  return await session.create(userId)
+async function createSession(userId) {
+  return await session.create(userId);
 }
 
 const orchestrator = {
