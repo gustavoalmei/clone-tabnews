@@ -26,6 +26,9 @@ describe("GET /api/v1/user", () => {
 
       expect(response2.status).toBe(200);
 
+      const cacheControl = response2.headers.get("Cache-Control");
+      expect(cacheControl).toBe("no-cache no-store, max-age=0, must-revalidate");
+
       const responseBody2 = await response2.json();
 
       expect(responseBody2).toEqual({
