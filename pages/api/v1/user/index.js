@@ -20,7 +20,7 @@ async function getHandler(req, res) {
 
   res.setHeader(
     "Cache-Control",
-    "no-cache no-store, max-age=0, must-revalidate",
+    "no-store, no-cache, max-age=0, must-revalidate",
   );
   // Definir o cabeçalho Cache-Control para evitar o cache no nevagador
   // o no-cache evita o cache no navegador
