@@ -33,5 +33,5 @@ async function deleteHandler(req, res) {
 
   controller.clearSessionCookie(res);
 
-  return res.status(401).json(clearSession);
+  return res.status(200).json(clearSession);
 }

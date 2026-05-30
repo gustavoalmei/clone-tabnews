@@ -76,7 +76,7 @@ describe("DELETE /api/v1/sessions", () => {
         },
       });
 
-      expect(response2.status).toBe(401);
+      expect(response2.status).toBe(200);
 
       const responseBody2 = await response2.json();
 
