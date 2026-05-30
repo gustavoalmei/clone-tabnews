@@ -40,11 +40,23 @@ async function setSessionCookie(res, sessionToken) {
   });
   res.setHeader("Set-Cookie", setCookie);
 }
+async function clearSessionCookie(res) {
+  const setCookie = cookie.serialize("session_id", "invalid", {
+    path: "/", // informa qual caminho pode ter acesso ao cookie ( nesse caso todas as rotas)
+    // expires: new Date(newSession.expires_at), // informa a data de expiração
+    maxAge: -1, // informa o tempo de expiração em milisegundos
+    secure: process.env.NODE_ENV === "production", // informa se o cookie deve ser enviado apenas em requisições HTTPS
+    httpOnly: true, // informa se o cookie deve ser enviado apenas em requisições HTTP, um código JS não poderá acessar o cookie
+  });
+  res.setHeader("Set-Cookie", setCookie);
+}
+
 const controller = {
   errorHandlers: {
     onNoMatch: onNoMatchHandler,
     onError: onErrorHandler,
   },
   setSessionCookie,
+  clearSessionCookie
 };
 export default controller;
