@@ -44,7 +44,7 @@ describe("DELETE /api/v1/sessions", () => {
       jest.useRealTimers();
 
       const response2 = await fetch("http://localhost:3000/api/v1/sessions", {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
         },
@@ -70,7 +70,7 @@ describe("DELETE /api/v1/sessions", () => {
       const sessionObject = await orchestrator.createSession(createUser.id);
 
       const response2 = await fetch("http://localhost:3000/api/v1/sessions", {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
         },
@@ -93,13 +93,12 @@ describe("DELETE /api/v1/sessions", () => {
       expect(Date.parse(responseBody2.create_at)).not.toBeNaN();
       expect(Date.parse(responseBody2.updated_at)).not.toBeNaN();
 
-
-      expect(responseBody2.expires_at < sessionObject.expires_at.toISOString()).toBe(
-        true,
-      );
-      expect(responseBody2.updated_at > sessionObject.updated_at.toISOString()).toBe(
-        true,
-      );
+      expect(
+        responseBody2.expires_at < sessionObject.expires_at.toISOString(),
+      ).toBe(true);
+      expect(
+        responseBody2.updated_at > sessionObject.updated_at.toISOString(),
+      ).toBe(true);
 
       const parsedSetCookie = setCookieParser(response2, {
         map: true,

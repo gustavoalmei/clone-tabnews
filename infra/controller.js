@@ -57,6 +57,6 @@ const controller = {
     onError: onErrorHandler,
   },
   setSessionCookie,
-  clearSessionCookie
+  clearSessionCookie,
 };
 export default controller;
