@@ -26,7 +26,6 @@ async function waitForWebServer() {
   }
 }
 
-
 async function waitForEmailServices() {
   await waitForEmailServer();
 }
@@ -69,22 +68,22 @@ async function createSession(userId) {
 
 async function clearAllEmails() {
   await fetch(`http://${EMAIL_HOST}/messages`, {
-    method: "DELETE"
+    method: "DELETE",
   });
 }
 
 async function getLastEmail() {
   const listEmails = await fetch(`http://${EMAIL_HOST}/messages`);
   const listEmailsReponse = await listEmails.json();
-  const lastEmailItem = listEmailsReponse.pop()
+  const lastEmailItem = listEmailsReponse.pop();
 
-  const getDetailsEmail = await fetch(`http://${EMAIL_HOST}/messages/${lastEmailItem.id}.plain`);
+  const getDetailsEmail = await fetch(
+    `http://${EMAIL_HOST}/messages/${lastEmailItem.id}.plain`,
+  );
   const getDetailsEmailResponse = await getDetailsEmail.text();
-  lastEmailItem.text = getDetailsEmailResponse
-  return lastEmailItem
+  lastEmailItem.text = getDetailsEmailResponse;
+  return lastEmailItem;
 }
-
-
 
 const orchestrator = {
   waitForAllServices,
