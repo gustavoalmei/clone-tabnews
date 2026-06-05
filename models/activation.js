@@ -1,5 +1,6 @@
 import database from "infra/database";
 import email from "infra/email"
+import { NotFoundError } from "infra/errors";
 import webServer from "infra/webServer";
 
 const EXPIRATION_ON_MILISECONDS = 60 * 15 * 1000; // 15 minutes
@@ -25,11 +26,11 @@ async function create(userId) {
   }
 }
 
-async function findOneByUserId(userId) {
-  const result = await insertQuery(userId);
+async function findOneByTokenId(tokenId) {
+  const result = await insertQuery(tokenId);
   return result;
 
-  async function insertQuery(userId) {
+  async function insertQuery(tokenId) {
     const result = await database.query({
       text: `
       SELECT
@@ -37,12 +38,21 @@ async function findOneByUserId(userId) {
       FROM
         user_activation_tokens
       WHERE
-        user_id = $1
+        id = $1
+        AND expires_at > NOW()
+        AND used_at IS NULL
       LIMIT
         1
       ;`,
-      values: [userId],
+      values: [tokenId],
     });
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O token de ativação não foi encontrado ou expirou.",
+        action: "Faça um novo cadastro.",
+        status_code: 401,
+      });
+    }
     return result.rows[0];
   }
 }
@@ -65,7 +75,7 @@ Fininfo
 const actvation = {
   sendEmailToUser,
   create,
-  findOneByUserId
+  findOneByTokenId
 }
 
 export default actvation

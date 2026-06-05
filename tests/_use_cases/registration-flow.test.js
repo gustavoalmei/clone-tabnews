@@ -42,15 +42,15 @@ describe("Use case: Registration flow (All successful)", () => {
   test("Receive confirmation email", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    const activationToken = await activation.findOneByUserId(createUserReponseBody.id)
-
     expect(lastEmail.sender).toBe("<fininfo@tabnews.com>");
     expect(lastEmail.subject).toBe("Ative seu cadastro na Fininfo");
     expect(lastEmail.recipients[0]).toBe("<gustavo@almeida.com>");
     expect(lastEmail.text).toContain("userRegistrationFlow");
-    expect(lastEmail.text).toContain(activationToken.id);
+    const regex = /http[s]?\s*:\/\/.*\/cadastro\/ativar\/([A-Z-a-z-0-9]+)/;
 
-
+    const tokenId = lastEmail.text.match(regex)[1]
+    const foundUserBasedOnToken = await activation.findOneByTokenId(tokenId)
+    expect(foundUserBasedOnToken.user_id).toBe(createUserReponseBody.id);
   })
 
   test("Active account", async () => {
