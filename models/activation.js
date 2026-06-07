@@ -2,6 +2,7 @@ import database from "infra/database";
 import email from "infra/email"
 import { NotFoundError } from "infra/errors";
 import webServer from "infra/webServer";
+import user from "./user";
 
 const EXPIRATION_ON_MILISECONDS = 60 * 15 * 1000; // 15 minutes
 
@@ -57,6 +58,30 @@ async function findOneByTokenId(tokenId) {
   }
 }
 
+async function markAsUsed(tokenId) {
+  const result = await runUpdateQuery(tokenId);
+  return result;
+
+  async function runUpdateQuery(tokenId) {
+    let result = await database.query({
+      text: `
+        UPDATE
+          user_activation_tokens
+        SET
+          used_at = NOW(),
+          updated_at = NOW()
+        WHERE
+          id = $1
+        RETURNING
+          *
+      ;`,
+      values: [tokenId],
+    })
+    return result.rows[0]
+
+  }
+}
+
 async function sendEmailToUser(user, activationToken) {
   await email.send({
     from: "Fininfo <fininfo@tabnews.com>",
@@ -72,10 +97,17 @@ Fininfo
   })
 }
 
+async function activateUserByUserId(userId) {
+  const activationToken = await user.setFeatures(userId, ["create:session"]);
+  return activationToken;
+}
+
 const actvation = {
   sendEmailToUser,
   create,
-  findOneByTokenId
+  findOneByTokenId,
+  markAsUsed,
+  activateUserByUserId
 }
 
 export default actvation
