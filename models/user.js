@@ -225,12 +225,69 @@ async function findOneById(id) {
   }
 }
 
+async function setFeatures(userId, features) {
+  const result = await updateQuery(userId, features);
+  return result
+
+  async function updateQuery(userId, features) {
+    const result = await database.query({
+      text: `
+      UPDATE
+        users
+      SET
+        features = $2,
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+      `,
+      values: [
+        userId,
+        features,
+      ],
+    });
+    return result.rows[0];
+  }
+}
+
+async function findUserByUsername(userName) {
+  const result = await selectQuery(userName);
+  return result
+
+  async function selectQuery(userName) {
+    let result = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        LOWER(username) = LOWER($1)
+      LIMIT
+        1
+      ;`,
+      values: [userName],
+    })
+
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O username informado não foi encontrado.",
+        action: "Verifique se o username esta correto.",
+      });
+    }
+    return result.rows[0]
+  }
+}
+
 const user = {
   create,
   findOneById,
   findOneByUsername,
   findOneByEmail,
   update,
+  setFeatures,
+  findUserByUsername
 };
 
 export default user;
