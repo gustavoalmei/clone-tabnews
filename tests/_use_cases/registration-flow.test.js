@@ -12,6 +12,8 @@ beforeAll(async () => {
 describe("Use case: Registration flow (All successful)", () => {
   let createUserReponseBody
   let foundUserBasedOnToken
+  let userObjectSession
+
   test("Create user account", async () => {
     const response = await fetch("http://localhost:3000/api/v1/users",
       {
@@ -67,7 +69,7 @@ describe("Use case: Registration flow (All successful)", () => {
     expect(Date.parse(responseBody.used_at)).not.toBeNaN();
 
     const findUserById = await user.findUserByUsername(createUserReponseBody.username);
-    expect(findUserById.features).toEqual(["create:session"]);
+    expect(findUserById.features).toEqual(["create:session", "read:session",]);
   })
 
   test("Login", async () => {
@@ -85,9 +87,19 @@ describe("Use case: Registration flow (All successful)", () => {
     expect(request.status).toBe(201);
     const response = await request.json();
     expect(response.user_id).toBe(createUserReponseBody.id);
+    userObjectSession = response
   })
 
   test("Get user information", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/user", {
+      headers: {
+        "Content-Type": "application/json",
+        "cookie": `session_id = ${userObjectSession.token}`
+      }
+    })
 
+    expect(response.status).toBe(200);
+    const responseBody = await response.json();
+    expect(responseBody.id).toBe(createUserReponseBody.id)
   })
 });

@@ -9,6 +9,7 @@ import {
 import * as cookie from "cookie";
 import session from "models/session";
 import user from "models/user";
+import authorization from "./authorization";
 
 function onNoMatchHandler(req, res) {
   const publicErrorObject = new MethodNotAllowedError();
@@ -66,8 +67,8 @@ async function injectAnonymousOrUser(req, res, next) {
 
 async function injectAuthenticatedUser(req) {
   const sessionToken = req.cookies.session_id;
-  const session = await session.findByToken(sessionToken);
-  const userObject = await user.findById(session.user_id);
+  const sessionObject = await session.findOneValidByToken(sessionToken);
+  const userObject = await user.findOneById(sessionObject.user_id);
 
   req.context = {
     ...req.context,
@@ -87,8 +88,8 @@ function injectAnonymousUser(req) {
 
 function canRequest(feature) {
   return function canRequestMiddleware(req, res, next) {
-    const userRequest = req.context.user
-    if (userRequest.features.includes(feature)) {
+    const userRequest = req.context?.user
+    if (authorization.can(userRequest, feature)) {
       return next()
     }
 

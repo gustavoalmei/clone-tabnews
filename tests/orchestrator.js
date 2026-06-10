@@ -4,6 +4,7 @@ import database from "infra/database";
 import migrator from "models/migrator";
 import session from "models/session";
 import user from "models/user";
+import activation from "models/activation";
 
 const EMAIL_HOST = `${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -56,9 +57,9 @@ async function clearDatabase() {
 async function createUser(objectUser) {
   return await user.create({
     username:
-      objectUser.username || faker.internet.username().replace(/[_.-]/g, ""),
-    email: objectUser.email || faker.internet.email(),
-    password: objectUser.password || faker.internet.password(),
+      objectUser?.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: objectUser?.email || faker.internet.email(),
+    password: objectUser?.password || faker.internet.password(),
   });
 }
 
@@ -85,6 +86,10 @@ async function getLastEmail() {
   return lastEmailItem;
 }
 
+async function activateUser(objectUser) {
+  return await activation.activateUserByUserId(objectUser.id);
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -94,6 +99,7 @@ const orchestrator = {
   clearAllEmails,
   waitForEmailServices,
   getLastEmail,
+  activateUser,
 };
 
 export default orchestrator;
