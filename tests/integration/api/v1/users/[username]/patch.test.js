@@ -60,16 +60,15 @@ describe("PATCH /api/v1/users/[username]", () => {
     });
 
     test("With duplicated 'username'", async () => {
-      const createdUser1 = await orchestrator.createUser({
+      await orchestrator.createUser({
         username: "user1",
       });
-      const activatedUser1 = await orchestrator.activateUser(createdUser1)
-      const sessionUser1 = await orchestrator.createSession(activatedUser1.id)
 
       const createdUser2 = await orchestrator.createUser({
         username: "user2",
       });
       const activatedUser2 = await orchestrator.activateUser(createdUser2)
+      const sessionUser2 = await orchestrator.createSession(activatedUser2.id)
 
       const user2Duplicated = await fetch(
         `http://localhost:3000/api/v1/users/${activatedUser2.username}`,
@@ -77,7 +76,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `session_id=${sessionUser1.token}`
+            Cookie: `session_id=${sessionUser2.token}`
           },
           body: JSON.stringify({
             username: "user1",
@@ -95,17 +94,51 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'email'", async () => {
+    test("With 'userB' target 'userA", async () => {
       const createdUser1 = await orchestrator.createUser({
+        username: "userA",
+      });
+
+      const createdUser2 = await orchestrator.createUser({
+        username: "userB",
+      });
+      const activatedUser2 = await orchestrator.activateUser(createdUser2)
+      const sessionUser2 = await orchestrator.createSession(activatedUser2.id)
+
+      const user2Duplicated = await fetch(
+        `http://localhost:3000/api/v1/users/${createdUser1.username}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${sessionUser2.token}`
+          },
+          body: JSON.stringify({
+            username: "userC",
+          }),
+        },
+      );
+
+      expect(user2Duplicated.status).toBe(403);
+      const responseBody2Duplicated = await user2Duplicated.json();
+      expect(responseBody2Duplicated).toEqual({
+        action: "Verifique se você possui a feature necessária para realizar essa ação.",
+        message: "Você não tem permissão para realizar essa ação",
+        name: "ForbiddenError",
+        status_code: 403,
+      });
+    });
+
+    test("With duplicated 'email'", async () => {
+      await orchestrator.createUser({
         email: "email1@email.com",
       });
-      const activatedUser1 = await orchestrator.activateUser(createdUser1)
-      const sessionUser1 = await orchestrator.createSession(activatedUser1.id)
 
       const createdUser2 = await orchestrator.createUser({
         email: "email2@email.com",
       });
       const activatedUser2 = await orchestrator.activateUser(createdUser2)
+      const sessionUser2 = await orchestrator.createSession(activatedUser2.id)
 
       const email2Duplicated = await fetch(
         `http://localhost:3000/api/v1/users/${activatedUser2.username}`,
@@ -113,7 +146,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `session_id=${sessionUser1.token}`
+            Cookie: `session_id=${sessionUser2.token}`
           },
           body: JSON.stringify({
             email: "email1@email.com",
