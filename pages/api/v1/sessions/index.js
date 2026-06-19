@@ -23,29 +23,38 @@ async function postHandler(req, res) {
 
   if (!authorization.can(authenticatedUser, "create:session")) {
     throw new ForbiddenError({
-      message: 'Acesso negado',
-      action: 'Verifique se o usuário informado possui as permissões necessárias.'
-    })
+      message: "Acesso negado",
+      action:
+        "Verifique se o usuário informado possui as permissões necessárias.",
+    });
   }
 
   const newSession = await session.create(authenticatedUser.id);
 
   controller.setSessionCookie(res, newSession.token);
 
-  const outputSecure = authorization.filterOutput(authenticatedUser, "read:session", newSession);
+  const outputSecure = authorization.filterOutput(
+    authenticatedUser,
+    "read:session",
+    newSession,
+  );
   return res.status(201).json(outputSecure);
 }
 
 async function deleteHandler(req, res) {
   const cookieSession = req.cookies.session_id;
 
-  const authenticatedUser = req.context.user
+  const authenticatedUser = req.context.user;
   const findSession = await session.findOneValidByToken(cookieSession);
 
   const clearSession = await session.expireById(findSession.id);
 
   controller.clearSessionCookie(res);
 
-  const outputSecure = authorization.filterOutput(authenticatedUser, "read:session", clearSession);
+  const outputSecure = authorization.filterOutput(
+    authenticatedUser,
+    "read:session",
+    clearSession,
+  );
   return res.status(200).json(outputSecure);
 }

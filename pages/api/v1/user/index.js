@@ -14,7 +14,7 @@ export default router.handler(controller.errorHandlers);
 async function getHandler(req, res) {
   const sessionToken = req.cookies.session_id;
 
-  const currentUser = req.context.user
+  const currentUser = req.context.user;
   const sessionObject = await session.findOneValidByToken(sessionToken);
   const sessionRenewed = await session.renew(sessionObject.id);
   controller.setSessionCookie(res, sessionRenewed.token);
@@ -31,6 +31,10 @@ async function getHandler(req, res) {
   // o max-age=0 evita o cache no navegador
   // o must-revalidate evita o cache no navegador
 
-  const outputSecure = authorization.filterOutput(currentUser, "read:user:self", userFound);
+  const outputSecure = authorization.filterOutput(
+    currentUser,
+    "read:user:self",
+    userFound,
+  );
   return res.status(200).json(outputSecure);
 }

@@ -4,7 +4,7 @@ import {
   ValidationError,
   NotFoundError,
   UnauthorizedError,
-  ForbiddenError
+  ForbiddenError,
 } from "infra/errors";
 import * as cookie from "cookie";
 import session from "models/session";
@@ -17,7 +17,11 @@ function onNoMatchHandler(req, res) {
 }
 
 function onErrorHandler(error, req, res) {
-  if (error instanceof ValidationError || error instanceof NotFoundError || error instanceof ForbiddenError) {
+  if (
+    error instanceof ValidationError ||
+    error instanceof NotFoundError ||
+    error instanceof ForbiddenError
+  ) {
     return res.status(error.statusCode).json(error);
   }
 
@@ -57,12 +61,12 @@ async function clearSessionCookie(res) {
 
 async function injectAnonymousOrUser(req, res, next) {
   if (req.cookies?.session_id) {
-    await injectAuthenticatedUser(req)
-    return next()
+    await injectAuthenticatedUser(req);
+    return next();
   }
 
-  injectAnonymousUser(req)
-  return next()
+  injectAnonymousUser(req);
+  return next();
 }
 
 async function injectAuthenticatedUser(req) {
@@ -79,7 +83,7 @@ async function injectAuthenticatedUser(req) {
 function injectAnonymousUser(req) {
   const anonymousUser = {
     features: ["read:activation_token", "create:session", "create:user"],
-  }
+  };
   req.context = {
     ...req.context,
     user: anonymousUser,
@@ -88,16 +92,17 @@ function injectAnonymousUser(req) {
 
 function canRequest(feature) {
   return function canRequestMiddleware(req, res, next) {
-    const userRequest = req.context?.user
+    const userRequest = req.context?.user;
     if (authorization.can(userRequest, feature)) {
-      return next()
+      return next();
     }
 
     throw new ForbiddenError({
-      message: 'Você não tem permissão para realizar essa ação',
-      action: 'Verifique se o usuário informado possui as permissões necessárias.'
-    })
-  }
+      message: "Você não tem permissão para realizar essa ação",
+      action:
+        "Verifique se o usuário informado possui as permissões necessárias.",
+    });
+  };
 }
 
 const controller = {

@@ -56,7 +56,7 @@ function DataBaseStatus() {
       : "text-red-500";
   }
 
-  if (!data?.dependencies.database?.version) return
+  if (!data?.dependencies.database?.version) return;
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">
@@ -76,7 +76,7 @@ function DataBaseVersion() {
     versionText = data.dependencies.database.version;
   }
 
-  if (!data?.dependencies.database?.version) return
+  if (!data?.dependencies.database?.version) return;
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">

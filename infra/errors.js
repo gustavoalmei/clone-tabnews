@@ -125,7 +125,9 @@ export class ForbiddenError extends Error {
       cause,
     });
     this.name = "ForbiddenError";
-    this.action = action || "Verifique se o usuário informado possui as permissões necessárias.";
+    this.action =
+      action ||
+      "Verifique se o usuário informado possui as permissões necessárias.";
     this.statusCode = 403;
   }
 

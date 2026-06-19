@@ -32,12 +32,12 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
     test("With expired token", async () => {
       jest.useFakeTimers({
         now: new Date(Date.now() - actvation.EXPIRATION_ON_MILISECONDS),
-      })
+      });
 
-      const userCreate = await orchestrator.createUser()
-      const expiredInvalidToken = await actvation.create(userCreate.id)
+      const userCreate = await orchestrator.createUser();
+      const expiredInvalidToken = await actvation.create(userCreate.id);
 
-      jest.useRealTimers()
+      jest.useRealTimers();
 
       const response = await fetch(
         `http://localhost:3000/api/v1/activations/${expiredInvalidToken.id}`,
@@ -57,8 +57,8 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
     });
 
     test("With already used token", async () => {
-      const userCreate = await orchestrator.createUser()
-      const expiredInvalidToken = await actvation.create(userCreate.id)
+      const userCreate = await orchestrator.createUser();
+      const expiredInvalidToken = await actvation.create(userCreate.id);
 
       const response1 = await fetch(
         `http://localhost:3000/api/v1/activations/${expiredInvalidToken.id}`,
@@ -96,8 +96,8 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
     });
 
     test("With valid token", async () => {
-      const userCreate = await orchestrator.createUser()
-      const expiredInvalidToken = await actvation.create(userCreate.id)
+      const userCreate = await orchestrator.createUser();
+      const expiredInvalidToken = await actvation.create(userCreate.id);
 
       const response1 = await fetch(
         `http://localhost:3000/api/v1/activations/${expiredInvalidToken.id}`,
@@ -129,19 +129,22 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
       expect(expiresAt - createdAt).toBe(actvation.EXPIRATION_ON_MILISECONDS);
 
       const activatedUser = await user.findOneById(responseBody.user_id);
-      expect(activatedUser.features).toEqual(["create:session", "read:session", "update:user"]);
+      expect(activatedUser.features).toEqual([
+        "create:session",
+        "read:session",
+        "update:user",
+      ]);
     });
   });
 
   describe("Default user", () => {
     test("With valid token, but already logged in user", async () => {
-      const user1 = await orchestrator.createUser()
-      await orchestrator.activateUser(user1)
-      const sessionUser1 = await orchestrator.createSession(user1.id)
+      const user1 = await orchestrator.createUser();
+      await orchestrator.activateUser(user1);
+      const sessionUser1 = await orchestrator.createSession(user1.id);
 
-
-      const user2 = await orchestrator.createUser()
-      const actvationUser2 = await actvation.create(user2.id)
+      const user2 = await orchestrator.createUser();
+      const actvationUser2 = await actvation.create(user2.id);
 
       const user2Activation = await fetch(
         `http://localhost:3000/api/v1/activations/${actvationUser2.id}`,
@@ -158,7 +161,8 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
       expect(responseUser2Activation).toEqual({
         name: "ForbiddenError",
         message: "Você não tem permissão para realizar essa ação",
-        action: "Verifique se o usuário informado possui as permissões necessárias.",
+        action:
+          "Verifique se o usuário informado possui as permissões necessárias.",
         status_code: 403,
       });
     });

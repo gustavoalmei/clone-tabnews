@@ -2,59 +2,63 @@ import authorization from "infra/authorization";
 import { InternalServerError } from "infra/errors.js";
 
 describe("models/authorization.js", () => {
-  describe('.can()', () => {
-    test('withou user', () => {
-      expect(() => { authorization.can() }).toThrow(InternalServerError);
-    })
+  describe(".can()", () => {
+    test("withou user", () => {
+      expect(() => {
+        authorization.can();
+      }).toThrow(InternalServerError);
+    });
 
-    test('without features', () => {
+    test("without features", () => {
       expect(() => {
         const createUser = {
-          username: 'username',
-        }
-        authorization.can(createUser)
+          username: "username",
+        };
+        authorization.can(createUser);
       }).toThrow(InternalServerError);
-    })
+    });
 
-    test('With unknown feature', () => {
+    test("With unknown feature", () => {
       expect(() => {
         const createUser = {
-          features: []
-        }
-        authorization.can(createUser, "unknown:feature")
+          features: [],
+        };
+        authorization.can(createUser, "unknown:feature");
       }).toThrow(InternalServerError);
-    })
+    });
 
-    test('With valid user and known feature', () => {
+    test("With valid user and known feature", () => {
       const createUser = {
-        features: ["create:user"]
-      }
+        features: ["create:user"],
+      };
       expect(authorization.can(createUser, "create:user")).toBe(true);
-    })
-  })
+    });
+  });
 
-  describe('.filterOutput()', () => {
-    test('withou user', () => {
-      expect(() => { authorization.filterOutput() }).toThrow(InternalServerError);
-    })
+  describe(".filterOutput()", () => {
+    test("withou user", () => {
+      expect(() => {
+        authorization.filterOutput();
+      }).toThrow(InternalServerError);
+    });
 
-    test('without features', () => {
+    test("without features", () => {
       expect(() => {
         const createUser = {
-          username: 'username',
-        }
-        authorization.filterOutput(createUser)
+          username: "username",
+        };
+        authorization.filterOutput(createUser);
       }).toThrow(InternalServerError);
-    })
+    });
 
-    test('With unknown feature', () => {
+    test("With unknown feature", () => {
       expect(() => {
         const createUser = {
-          features: []
-        }
-        authorization.filterOutput(createUser, "unknown:feature")
+          features: [],
+        };
+        authorization.filterOutput(createUser, "unknown:feature");
       }).toThrow(InternalServerError);
-    })
+    });
 
     test("with valid `user`, known `feature` but no `resource`", () => {
       const createdUser = {
@@ -95,5 +99,5 @@ describe("models/authorization.js", () => {
         updated_at: "2026-01-01T00:00:00.000Z",
       });
     });
-  })
-})
+  });
+});

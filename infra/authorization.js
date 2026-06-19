@@ -25,42 +25,42 @@ const availableFeatures = [
 ];
 
 function can(user, feature, resource) {
-  validationUser(user)
-  validationFeatures(feature)
+  validationUser(user);
+  validationFeatures(feature);
 
   let authorization = false;
 
   if (user?.features.includes(feature)) {
-    authorization = true
+    authorization = true;
   }
 
   if (feature === "update:user" && resource) {
-    authorization = false
+    authorization = false;
 
-    if (user.id === resource.id || can(user, 'update:user:others')) {
-      authorization = true
+    if (user.id === resource.id || can(user, "update:user:others")) {
+      authorization = true;
     }
   }
 
-  return authorization
+  return authorization;
 }
 
 function filterOutput(user, feature, resource) {
-  validationUser(user)
-  validationFeatures(feature)
-  validateResource(resource)
+  validationUser(user);
+  validationFeatures(feature);
+  validateResource(resource);
 
-  if (feature === 'read:user') {
+  if (feature === "read:user") {
     return {
       id: resource.id,
       username: resource.username,
       features: resource.features,
       create_at: resource.create_at,
-      updated_at: resource.updated_at
-    }
+      updated_at: resource.updated_at,
+    };
   }
 
-  if (feature === 'read:user:self') {
+  if (feature === "read:user:self") {
     if (user.id === resource.id) {
       return {
         id: resource.id,
@@ -68,12 +68,12 @@ function filterOutput(user, feature, resource) {
         email: resource.email,
         features: resource.features,
         create_at: resource.create_at,
-        updated_at: resource.updated_at
-      }
+        updated_at: resource.updated_at,
+      };
     }
   }
 
-  if (feature === 'read:session') {
+  if (feature === "read:session") {
     if (user.id === resource.user_id) {
       return {
         id: resource.id,
@@ -81,24 +81,24 @@ function filterOutput(user, feature, resource) {
         user_id: resource.user_id,
         create_at: resource.create_at,
         updated_at: resource.updated_at,
-        expires_at: resource.expires_at
-      }
+        expires_at: resource.expires_at,
+      };
     }
   }
 
-  if (feature === 'read:activation_token') {
+  if (feature === "read:activation_token") {
     return {
       id: resource.id,
       user_id: resource.user_id,
       create_at: resource.create_at,
       updated_at: resource.updated_at,
       expires_at: resource.expires_at,
-      used_at: resource.used_at
-    }
+      used_at: resource.used_at,
+    };
   }
 
-  if (feature === 'read:status') {
-    if (can(user, 'read:status:all')) {
+  if (feature === "read:status") {
+    if (can(user, "read:status:all")) {
       return {
         updated_at: resource.updatedAt,
         dependencies: {
@@ -108,7 +108,7 @@ function filterOutput(user, feature, resource) {
             version: resource.versionPostgresValue,
           },
         },
-      }
+      };
     }
 
     return {
@@ -119,17 +119,17 @@ function filterOutput(user, feature, resource) {
           opened_conections: resource.openedConectionsPostgresValue,
         },
       },
-    }
+    };
   }
 
-  if (feature === 'read:migration') {
-    return resource.map(migration => {
+  if (feature === "read:migration") {
+    return resource.map((migration) => {
       return {
         path: migration.path,
         name: migration.status,
-        timestamp: migration.timestamp
-      }
-    })
+        timestamp: migration.timestamp,
+      };
+    });
   }
 }
 
@@ -152,15 +152,14 @@ function validationFeatures(feature) {
 function validateResource(resource) {
   if (!resource) {
     throw new InternalServerError({
-      cause:
-        "É necessário fornecer um `resource`.",
+      cause: "É necessário fornecer um `resource`.",
     });
   }
 }
 
 const authorization = {
   can,
-  filterOutput
-}
+  filterOutput,
+};
 
-export default authorization
+export default authorization;

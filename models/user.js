@@ -227,7 +227,7 @@ async function findOneById(id) {
 
 async function setFeatures(userId, features) {
   const result = await updateQuery(userId, features);
-  return result
+  return result;
 
   async function updateQuery(userId, features) {
     const result = await database.query({
@@ -242,10 +242,7 @@ async function setFeatures(userId, features) {
       RETURNING
         *
       `,
-      values: [
-        userId,
-        features,
-      ],
+      values: [userId, features],
     });
     return result.rows[0];
   }
@@ -253,7 +250,7 @@ async function setFeatures(userId, features) {
 
 async function addFeatures(userId, features) {
   const result = await updateQuery(userId, features);
-  return result
+  return result;
 
   async function updateQuery(userId, features) {
     const result = await database.query({
@@ -268,10 +265,7 @@ async function addFeatures(userId, features) {
       RETURNING
         *
       `,
-      values: [
-        userId,
-        features,
-      ],
+      values: [userId, features],
     });
     return result.rows[0];
   }
@@ -279,7 +273,7 @@ async function addFeatures(userId, features) {
 
 async function findUserByUsername(userName) {
   const result = await selectQuery(userName);
-  return result
+  return result;
 
   async function selectQuery(userName) {
     let result = await database.query({
@@ -294,7 +288,7 @@ async function findUserByUsername(userName) {
         1
       ;`,
       values: [userName],
-    })
+    });
 
     if (result.rowCount === 0) {
       throw new NotFoundError({
@@ -302,7 +296,7 @@ async function findUserByUsername(userName) {
         action: "Verifique se o username esta correto.",
       });
     }
-    return result.rows[0]
+    return result.rows[0];
   }
 }
 
@@ -314,7 +308,7 @@ const user = {
   update,
   setFeatures,
   findUserByUsername,
-  addFeatures
+  addFeatures,
 };
 
 export default user;

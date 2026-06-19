@@ -39,15 +39,17 @@ describe("GET /api/v1/status", () => {
 
   describe("Previleged user", () => {
     test("Retrieving current system status", async () => {
-      const userPrivileged = await orchestrator.createUser()
-      await orchestrator.activateUser(userPrivileged)
-      await orchestrator.addFeaturesToUser(userPrivileged, ["read:status:all"])
-      const userPrivilegedSession = await orchestrator.createSession(userPrivileged.id)
+      const userPrivileged = await orchestrator.createUser();
+      await orchestrator.activateUser(userPrivileged);
+      await orchestrator.addFeaturesToUser(userPrivileged, ["read:status:all"]);
+      const userPrivilegedSession = await orchestrator.createSession(
+        userPrivileged.id,
+      );
 
       const response = await fetch("http://localhost:3000/api/v1/status", {
         headers: {
           Cookie: `session_id=${userPrivilegedSession.token}`,
-        }
+        },
       });
 
       expect(response.status).toBe(200);

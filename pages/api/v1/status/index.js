@@ -25,12 +25,16 @@ async function getHandler(req, res) {
   });
   const openedConectionsPostgresValue = openedConectionsPostgres.rows[0].count;
 
-  const authenticatedUser = req.context?.user
-  const outputSecure = authorization.filterOutput(authenticatedUser, "read:status", {
-    updatedAt,
-    versionPostgresValue,
-    maxConectionsPostgresValue,
-    openedConectionsPostgresValue
-  });
+  const authenticatedUser = req.context?.user;
+  const outputSecure = authorization.filterOutput(
+    authenticatedUser,
+    "read:status",
+    {
+      updatedAt,
+      versionPostgresValue,
+      maxConectionsPostgresValue,
+      openedConectionsPostgresValue,
+    },
+  );
   res.status(200).json(outputSecure);
 }

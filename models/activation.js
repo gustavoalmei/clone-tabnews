@@ -1,5 +1,5 @@
 import database from "infra/database";
-import email from "infra/email"
+import email from "infra/email";
 import { ForbiddenError, NotFoundError } from "infra/errors";
 import webServer from "infra/webServer";
 import user from "./user";
@@ -77,9 +77,8 @@ async function markAsUsed(tokenId) {
           *
       ;`,
       values: [tokenId],
-    })
-    return result.rows[0]
-
+    });
+    return result.rows[0];
   }
 }
 
@@ -95,7 +94,7 @@ ${webServer.origin}/cadastro/ativar/${activationToken.id}
 Atenciosamente,
 Fininfo
 `,
-  })
+  });
 }
 
 async function activateUserByUserId(userId) {
@@ -105,10 +104,14 @@ async function activateUserByUserId(userId) {
     throw new ForbiddenError({
       message: "Você não pode mais utilizar tokens de ativação",
       action: "Entre com contato com o suporte.",
-    })
+    });
   }
 
-  const activationUser = await user.setFeatures(userId, ["create:session", "read:session", "update:user"]);
+  const activationUser = await user.setFeatures(userId, [
+    "create:session",
+    "read:session",
+    "update:user",
+  ]);
   return activationUser;
 }
 
@@ -118,7 +121,7 @@ const actvation = {
   findOneByTokenId,
   markAsUsed,
   activateUserByUserId,
-  EXPIRATION_ON_MILISECONDS
-}
+  EXPIRATION_ON_MILISECONDS,
+};
 
-export default actvation
+export default actvation;

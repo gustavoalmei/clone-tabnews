@@ -20,10 +20,11 @@ describe("POST /api/v1/migrations", () => {
         expect(response.status).toBe(403);
         const responseBody = await response.json();
         expect(responseBody).toEqual({
-          name: 'ForbiddenError',
-          message: 'Você não tem permissão para realizar essa ação',
-          action: 'Verifique se o usuário informado possui as permissões necessárias.',
-          status_code: 403
+          name: "ForbiddenError",
+          message: "Você não tem permissão para realizar essa ação",
+          action:
+            "Verifique se o usuário informado possui as permissões necessárias.",
+          status_code: 403,
         });
       });
     });
@@ -33,14 +34,14 @@ describe("POST /api/v1/migrations", () => {
     describe("Running pending migrations", () => {
       test("Running pending migrations", async () => {
         const createdUser = await orchestrator.createUser();
-        const activatedUser = await orchestrator.activateUser(createdUser)
-        const sessionUser = await orchestrator.createSession(activatedUser.id)
+        const activatedUser = await orchestrator.activateUser(createdUser);
+        const sessionUser = await orchestrator.createSession(activatedUser.id);
         const response = await fetch(
           "http://localhost:3000/api/v1/migrations",
           {
             method: "POST",
             headers: {
-              Cookie: `session_id=${sessionUser.token}`
+              Cookie: `session_id=${sessionUser.token}`,
             },
           },
         );
@@ -48,10 +49,11 @@ describe("POST /api/v1/migrations", () => {
         expect(response.status).toBe(403);
         const responseBody = await response.json();
         expect(responseBody).toEqual({
-          name: 'ForbiddenError',
-          message: 'Você não tem permissão para realizar essa ação',
-          action: 'Verifique se o usuário informado possui as permissões necessárias.',
-          status_code: 403
+          name: "ForbiddenError",
+          message: "Você não tem permissão para realizar essa ação",
+          action:
+            "Verifique se o usuário informado possui as permissões necessárias.",
+          status_code: 403,
         });
       });
     });
@@ -61,16 +63,16 @@ describe("POST /api/v1/migrations", () => {
     describe("Running pending migrations", () => {
       test("With `create:migration`", async () => {
         const createdUser = await orchestrator.createUser();
-        const activatedUser = await orchestrator.activateUser(createdUser)
-        await orchestrator.addFeaturesToUser(createdUser, ["create:migration"])
-        const sessionUser = await orchestrator.createSession(activatedUser.id)
+        const activatedUser = await orchestrator.activateUser(createdUser);
+        await orchestrator.addFeaturesToUser(createdUser, ["create:migration"]);
+        const sessionUser = await orchestrator.createSession(activatedUser.id);
 
         const response2 = await fetch(
           "http://localhost:3000/api/v1/migrations",
           {
             method: "POST",
             headers: {
-              Cookie: `session_id=${sessionUser.token}`
+              Cookie: `session_id=${sessionUser.token}`,
             },
           },
         );

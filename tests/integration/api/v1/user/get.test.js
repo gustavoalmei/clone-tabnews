@@ -19,8 +19,9 @@ describe("GET /api/v1/user", () => {
       const responseBody2 = await response.json();
 
       expect(responseBody2).toEqual({
-        message: 'Você não tem permissão para realizar essa ação',
-        action: 'Verifique se o usuário informado possui as permissões necessárias.',
+        message: "Você não tem permissão para realizar essa ação",
+        action:
+          "Verifique se o usuário informado possui as permissões necessárias.",
         name: "ForbiddenError",
         status_code: 403,
       });

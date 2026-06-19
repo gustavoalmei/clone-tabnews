@@ -5,7 +5,7 @@ exports.up = (pgm) => {
       notNull: true,
       default: "{}",
     },
-  })
+  });
 };
 
-exports.down = false
+exports.down = false;

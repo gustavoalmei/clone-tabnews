@@ -14,12 +14,16 @@ export default router.handler(controller.errorHandlers);
 async function postHandler(req, res) {
   const userInputValues = req.body;
 
-  const currentUser = req.context.user
+  const currentUser = req.context.user;
   const newUser = await user.create(userInputValues);
 
   const activationToken = await activation.create(newUser.id);
   await activation.sendEmailToUser(newUser, activationToken);
 
-  const outputSecure = authorization.filterOutput(currentUser, "read:user", newUser);
+  const outputSecure = authorization.filterOutput(
+    currentUser,
+    "read:user",
+    newUser,
+  );
   return res.status(201).json(outputSecure);
 }

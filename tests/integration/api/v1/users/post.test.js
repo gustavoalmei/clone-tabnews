@@ -137,7 +137,7 @@ describe("POST /api/v1/users", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "cookie": `session_id=${sessionCreated.token}`,
+          cookie: `session_id=${sessionCreated.token}`,
         },
         body: JSON.stringify({
           username: "gustavoAlmeida",
@@ -151,7 +151,8 @@ describe("POST /api/v1/users", () => {
       const responseBody = await response.json();
 
       expect(responseBody).toEqual({
-        action: "Verifique se o usuário informado possui as permissões necessárias.",
+        action:
+          "Verifique se o usuário informado possui as permissões necessárias.",
         message: "Você não tem permissão para realizar essa ação",
         name: "ForbiddenError",
         status_code: 403,
