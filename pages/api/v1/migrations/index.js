@@ -28,6 +28,7 @@ async function postHandler(req, res) {
   const migratedMigrations = await migrator.runPendingMigrations();
 
   const authenticatedUser = req.context.user;
+  //eslint-disable-next-line
   const outputSecure = authorization.filterOutput(
     authenticatedUser,
     "read:migration",
