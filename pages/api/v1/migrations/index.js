@@ -5,9 +5,9 @@ import authorization from "infra/authorization";
 
 const router = createRouter();
 
-router.use(controller.injectAnonymousOrUser);
-router.get(controller.canRequest("read:migration"), getHandler);
-router.post(controller.canRequest("create:migration"), postHandler);
+// router.use(controller.injectAnonymousOrUser);
+router.get(getHandler);
+router.post(postHandler);
 
 export default router.handler(controller.errorHandlers);
 
@@ -35,7 +35,7 @@ async function postHandler(req, res) {
   );
 
   if (migratedMigrations.length > 0) {
-    return res.status(201).json(outputSecure);
+    return res.status(201).json(migratedMigrations);
   }
-  return res.status(200).json(outputSecure);
+  return res.status(200).json(migratedMigrations);
 }
