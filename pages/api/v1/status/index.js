@@ -1,9 +1,11 @@
 import { createRouter } from "next-connect";
 import database from "infra/database";
 import controller from "infra/controller";
+import authorization from "infra/authorization";
 
 const router = createRouter();
 
+router.use(controller.injectAnonymousOrUser);
 router.get(getHandler);
 
 export default router.handler(controller.errorHandlers);
@@ -22,14 +24,13 @@ async function getHandler(req, res) {
     values: [dataBaseName],
   });
   const openedConectionsPostgresValue = openedConectionsPostgres.rows[0].count;
-  res.status(200).json({
-    updated_at: updatedAt,
-    dependencies: {
-      database: {
-        max_connections: parseInt(maxConectionsPostgresValue),
-        opened_conections: openedConectionsPostgresValue,
-        version: versionPostgresValue,
-      },
-    },
+
+  const authenticatedUser = req.context?.user
+  const outputSecure = authorization.filterOutput(authenticatedUser, "read:status", {
+    updatedAt,
+    versionPostgresValue,
+    maxConectionsPostgresValue,
+    openedConectionsPostgresValue
   });
+  res.status(200).json(outputSecure);
 }

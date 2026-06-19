@@ -14,8 +14,10 @@ export default router.handler(controller.errorHandlers);
 
 async function getHandler(req, res) {
   const { username } = req.query;
+  const userTryGet = req.context.user
   const foundUser = await user.findOneByUsername(username);
-  return res.status(200).json(foundUser);
+  const outputSecure = authorization.filterOutput(userTryGet, "read:user", foundUser);
+  return res.status(200).json(outputSecure);
 }
 
 async function patchHandler(req, res) {
@@ -31,6 +33,9 @@ async function patchHandler(req, res) {
       action: "Verifique se você possui a feature necessária para realizar essa ação.",
     });
   }
+
   const updatedUser = await user.update(username, userInputValues);
-  return res.status(200).json(updatedUser);
+  const outputSecure = authorization.filterOutput(currentUser, "read:user", updatedUser);
+
+  return res.status(200).json(outputSecure);
 }
