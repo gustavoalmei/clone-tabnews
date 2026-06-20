@@ -15,7 +15,7 @@ async function waitForAllServices() {
 async function waitForWebServer() {
   return retry(fetchStatusPage, {
     retries: 100,
-    naxTimeout: 1000,
+    maxTimeout: 1000,
   });
 
   async function fetchStatusPage() {
@@ -34,7 +34,7 @@ async function waitForEmailServices() {
 async function waitForEmailServer() {
   return retry(fetchStatusPage, {
     retries: 100,
-    naxTimeout: 1000,
+    maxTimeout: 1000,
   });
 
   async function fetchStatusPage() {
