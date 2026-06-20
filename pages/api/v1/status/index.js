@@ -6,7 +6,7 @@ import authorization from "infra/authorization";
 const router = createRouter();
 
 router.use(controller.injectAnonymousOrUser);
-router.get(controller.canRequest("read:status"), getHandler);
+router.get(getHandler);
 
 export default router.handler(controller.errorHandlers);
 
