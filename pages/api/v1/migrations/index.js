@@ -5,21 +5,17 @@ import authorization from "infra/authorization";
 
 const router = createRouter();
 
-// router.use(controller.injectAnonymousOrUser);
-router.get(getHandler);
-router.post(postHandler);
+router.use(controller.injectAnonymousOrUser);
+router.get(controller.canRequest("read:migration"), getHandler);
+router.post(controller.canRequest("create:migration"), postHandler);
 
 export default router.handler(controller.errorHandlers);
 
 async function getHandler(req, res) {
   const peddingMigrations = await migrator.listPendingMigrations();
 
-  const authenticatedUser = req.context.user;
-  const outputSecure = authorization.filterOutput(
-    authenticatedUser,
-    "read:migration",
-    peddingMigrations,
-  );
+  const authenticatedUser = req.context.user
+  const outputSecure = authorization.filterOutput(authenticatedUser, "read:migration", peddingMigrations)
 
   return res.status(200).json(outputSecure);
 }
@@ -27,16 +23,11 @@ async function getHandler(req, res) {
 async function postHandler(req, res) {
   const migratedMigrations = await migrator.runPendingMigrations();
 
-  const authenticatedUser = req.context.user;
-  //eslint-disable-next-line
-  const outputSecure = authorization.filterOutput(
-    authenticatedUser,
-    "read:migration",
-    migratedMigrations,
-  );
+  const authenticatedUser = req.context.user
+  const outputSecure = authorization.filterOutput(authenticatedUser, "read:migration", migratedMigrations)
 
   if (migratedMigrations.length > 0) {
-    return res.status(201).json(migratedMigrations);
+    return res.status(201).json(outputSecure);
   }
-  return res.status(200).json(migratedMigrations);
+  return res.status(200).json(outputSecure);
 }
