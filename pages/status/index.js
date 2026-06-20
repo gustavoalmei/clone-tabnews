@@ -8,13 +8,13 @@ async function fetchApi(key) {
 
 export default function StatusPage() {
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center gap-4 p-4">
-      <div className="w-200 h-50">
-        <div className="flex justify-between items-center">
+    <div className="w-full h-screen flex flex-col items-center justify-center gap-4 p-4 flex-wrap">
+      <div className="w-full max-w-2xl">
+        <div className="flex justify-between flex-wrap items-center">
           <h1 className="font-bold text-xl my-2">Status</h1>
           <UpdateAt />
         </div>
-        <div className="grid grid-cols-2 h-full gap-4 mt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
           <DataBaseStatus />
           <DataBaseVersion />
           <OpenConnections />
@@ -50,11 +50,13 @@ function DataBaseStatus() {
   let statusText = "Carregando...";
   let colorStatus = "text-gray-500";
   if (!isLoading && data) {
-    statusText = data.dependencies.database.version ? "Online" : "Offline";
-    colorStatus = data.dependencies.database.version
+    statusText = data?.dependencies?.database?.version ? "Online" : "Offline";
+    colorStatus = data?.dependencies?.database?.version
       ? "text-green-500"
       : "text-red-500";
   }
+
+  if (!data?.dependencies?.database?.version) return;
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">
@@ -71,8 +73,10 @@ function DataBaseVersion() {
 
   let versionText = "Carregando...";
   if (!isLoading && data) {
-    versionText = data.dependencies.database.version;
+    versionText = data?.dependencies?.database?.version;
   }
+
+  if (!data?.dependencies?.database?.version) return;
 
   return (
     <div className="border border-neutral-300 p-4 rounded-lg shadow-md flex items-start justify-center flex-col gap-2">
@@ -89,7 +93,7 @@ function OpenConnections() {
 
   let openedConnectionsText = "Carregando...";
   if (!isLoading && data) {
-    openedConnectionsText = data.dependencies.database.opened_conections;
+    openedConnectionsText = data?.dependencies?.database?.opened_conections;
   }
 
   return (
@@ -107,7 +111,7 @@ function MaxConnections() {
 
   let maxConnectionsText = "Carregando...";
   if (!isLoading && data) {
-    maxConnectionsText = data.dependencies.database.max_connections;
+    maxConnectionsText = data?.dependencies?.database?.max_connections;
   }
 
   return (

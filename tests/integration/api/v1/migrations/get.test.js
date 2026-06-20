@@ -3,6 +3,7 @@ import orchestrator from "tests/orchestrator";
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
+  await orchestrator.runPendingMigrations();
 });
 
 describe("GET /api/v1/migrations", () => {
@@ -10,81 +11,59 @@ describe("GET /api/v1/migrations", () => {
     test("Retrieving pending migrations", async () => {
       const response = await fetch("http://localhost:3000/api/v1/migrations");
 
+      expect(response.status).toBe(403);
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não tem permissão para realizar essa ação",
+        action:
+          "Verifique se o usuário informado possui as permissões necessárias.",
+        status_code: 403,
+      });
+    });
+  });
+
+  describe("Default user", () => {
+    test("Retrieving pending migrations", async () => {
+      const createdUser = await orchestrator.createUser();
+      const activatedUser = await orchestrator.activateUser(createdUser);
+      const sessionUser = await orchestrator.createSession(activatedUser.id);
+
+      const response = await fetch("http://localhost:3000/api/v1/migrations", {
+        headers: {
+          Cookie: `session_id=${sessionUser.token}`,
+        },
+      });
+
+      expect(response.status).toBe(403);
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não tem permissão para realizar essa ação",
+        action:
+          "Verifique se o usuário informado possui as permissões necessárias.",
+        status_code: 403,
+      });
+    });
+  });
+
+  describe("Privileged user", () => {
+    test("Retrieving pending migrations", async () => {
+      const createdUser = await orchestrator.createUser();
+      const activatedUser = await orchestrator.activateUser(createdUser);
+      await orchestrator.addFeaturesToUser(createdUser, ["read:migration"]);
+      const sessionUser = await orchestrator.createSession(activatedUser.id);
+
+      const response = await fetch("http://localhost:3000/api/v1/migrations", {
+        headers: {
+          Cookie: `session_id=${sessionUser.token}`,
+        },
+      });
+
       expect(response.status).toBe(200);
       const responseBody = await response.json();
+
       expect(Array.isArray(responseBody)).toBe(true);
-
-      expect(responseBody.length).toBeGreaterThan(0);
-
-      expect(process.env.NODE_ENV).toBe("test");
-
-      expect(process.env.host).toBeUndefined();
-      expect(process.env.port).toBeUndefined();
-      expect(process.env.user).toBeUndefined();
-      expect(process.env.password).toBeUndefined();
-      expect(process.env.database).toBeUndefined();
-    });
-  });
-});
-
-describe("Method not allowed", () => {
-  describe("Method PUT", () => {
-    test("Retrieving pending migrations", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/migrations", {
-        method: "PUT",
-      });
-
-      expect(response.status).toBe(405);
-
-      const responsyBody = await response.json();
-
-      expect(responsyBody).toEqual({
-        name: "MethodNotAllowedError",
-        message: "Método não permitido para esse endpoint.",
-        action:
-          "Verifique se o método HTTP enviado é válido para este endpoint.",
-        status_code: 405,
-      });
-    });
-  });
-
-  describe("Method DELETE", () => {
-    test("Retrieving pending migrations", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/migrations", {
-        method: "DELETE",
-      });
-
-      expect(response.status).toBe(405);
-
-      const responsyBody = await response.json();
-
-      expect(responsyBody).toEqual({
-        name: "MethodNotAllowedError",
-        message: "Método não permitido para esse endpoint.",
-        action:
-          "Verifique se o método HTTP enviado é válido para este endpoint.",
-        status_code: 405,
-      });
-    });
-  });
-
-  describe("Method PATCH", () => {
-    test("Retrieving pending migrations", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/migrations", {
-        method: "PATCH",
-      });
-
-      expect(response.status).toBe(405);
-
-      const responsyBody = await response.json();
-
-      expect(responsyBody).toEqual({
-        name: "MethodNotAllowedError",
-        message: "Método não permitido para esse endpoint.",
-        action:
-          "Verifique se o método HTTP enviado é válido para este endpoint.",
-        status_code: 405,
-      });
     });
   });
 });

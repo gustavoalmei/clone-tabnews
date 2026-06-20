@@ -69,6 +69,7 @@ async function create(userInputValues) {
   await validateUniqueEmail(userInputValues.email);
   await validateUniqueUsername(userInputValues.username);
   await hashPasswordInObject(userInputValues);
+  await insertFeaturesDefault(userInputValues);
 
   const newUser = await runInsertQuery(userInputValues);
   return newUser;
@@ -77,9 +78,9 @@ async function create(userInputValues) {
     const result = await database.query({
       text: `
     INSERT INTO
-      users (username, email, password)
+      users (username, email, password, features)
     VALUES
-      ($1, $2, $3)
+      ($1, $2, $3, $4)
     RETURNING
       *
     ;`,
@@ -87,9 +88,14 @@ async function create(userInputValues) {
         userInputValues.username,
         userInputValues.email,
         userInputValues.password,
+        userInputValues.features,
       ],
     });
     return result.rows[0];
+  }
+
+  async function insertFeaturesDefault(userInputValues) {
+    userInputValues.features = ["read:activation_token"];
   }
 }
 
@@ -219,12 +225,90 @@ async function findOneById(id) {
   }
 }
 
+async function setFeatures(userId, features) {
+  const result = await updateQuery(userId, features);
+  return result;
+
+  async function updateQuery(userId, features) {
+    const result = await database.query({
+      text: `
+      UPDATE
+        users
+      SET
+        features = $2,
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+      `,
+      values: [userId, features],
+    });
+    return result.rows[0];
+  }
+}
+
+async function addFeatures(userId, features) {
+  const result = await updateQuery(userId, features);
+  return result;
+
+  async function updateQuery(userId, features) {
+    const result = await database.query({
+      text: `
+      UPDATE
+        users
+      SET
+        features = array_cat(features, $2),
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+      `,
+      values: [userId, features],
+    });
+    return result.rows[0];
+  }
+}
+
+async function findUserByUsername(userName) {
+  const result = await selectQuery(userName);
+  return result;
+
+  async function selectQuery(userName) {
+    let result = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        LOWER(username) = LOWER($1)
+      LIMIT
+        1
+      ;`,
+      values: [userName],
+    });
+
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O username informado não foi encontrado.",
+        action: "Verifique se o username esta correto.",
+      });
+    }
+    return result.rows[0];
+  }
+}
+
 const user = {
   create,
   findOneById,
   findOneByUsername,
   findOneByEmail,
   update,
+  setFeatures,
+  findUserByUsername,
+  addFeatures,
 };
 
 export default user;

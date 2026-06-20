@@ -4,6 +4,7 @@ import database from "infra/database";
 import migrator from "models/migrator";
 import session from "models/session";
 import user from "models/user";
+import activation from "models/activation";
 
 const EMAIL_HOST = `${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -14,7 +15,7 @@ async function waitForAllServices() {
 async function waitForWebServer() {
   return retry(fetchStatusPage, {
     retries: 100,
-    naxTimeout: 1000,
+    maxTimeout: 1000,
   });
 
   async function fetchStatusPage() {
@@ -33,7 +34,7 @@ async function waitForEmailServices() {
 async function waitForEmailServer() {
   return retry(fetchStatusPage, {
     retries: 100,
-    naxTimeout: 1000,
+    maxTimeout: 1000,
   });
 
   async function fetchStatusPage() {
@@ -56,9 +57,9 @@ async function clearDatabase() {
 async function createUser(objectUser) {
   return await user.create({
     username:
-      objectUser.username || faker.internet.username().replace(/[_.-]/g, ""),
-    email: objectUser.email || faker.internet.email(),
-    password: objectUser.password || faker.internet.password(),
+      objectUser?.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: objectUser?.email || faker.internet.email(),
+    password: objectUser?.password || faker.internet.password(),
   });
 }
 
@@ -85,6 +86,14 @@ async function getLastEmail() {
   return lastEmailItem;
 }
 
+async function activateUser(objectUser) {
+  return await activation.activateUserByUserId(objectUser.id);
+}
+
+async function addFeaturesToUser(objectUser, features) {
+  return await user.addFeatures(objectUser.id, features);
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -94,6 +103,8 @@ const orchestrator = {
   clearAllEmails,
   waitForEmailServices,
   getLastEmail,
+  activateUser,
+  addFeaturesToUser,
 };
 
 export default orchestrator;

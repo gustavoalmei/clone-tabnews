@@ -10,6 +10,23 @@ beforeAll(async () => {
 });
 
 describe("GET /api/v1/user", () => {
+  describe("Anonymous user", () => {
+    test("With valid session", async () => {
+      const response = await fetch("http://localhost:3000/api/v1/user");
+
+      expect(response.status).toBe(403);
+
+      const responseBody2 = await response.json();
+
+      expect(responseBody2).toEqual({
+        message: "Você não tem permissão para realizar essa ação",
+        action:
+          "Verifique se o usuário informado possui as permissões necessárias.",
+        name: "ForbiddenError",
+        status_code: 403,
+      });
+    });
+  });
   describe("Default user", () => {
     test("With valid session", async () => {
       const createUser = await orchestrator.createUser({
@@ -17,6 +34,8 @@ describe("GET /api/v1/user", () => {
       });
 
       const sessionObject = await orchestrator.createSession(createUser.id);
+
+      const activateUser = await orchestrator.activateUser(createUser);
 
       const response2 = await fetch("http://localhost:3000/api/v1/user", {
         headers: {
@@ -37,9 +56,9 @@ describe("GET /api/v1/user", () => {
         id: createUser.id,
         username: "userWithValidSession",
         email: createUser.email,
-        password: createUser.password,
+        features: ["create:session", "read:session", "update:user"],
         create_at: createUser.create_at.toISOString(),
-        updated_at: createUser.updated_at.toISOString(),
+        updated_at: activateUser.updated_at.toISOString(),
       });
 
       expect(uuidVersion(responseBody2.id)).toBe(4);
@@ -130,6 +149,7 @@ describe("GET /api/v1/user", () => {
         username: "userWithSessionToExpire",
       });
 
+      const activateUser = await orchestrator.activateUser(createUser);
       const sessionObject = await orchestrator.createSession(createUser.id);
 
       jest.useRealTimers();
@@ -148,9 +168,9 @@ describe("GET /api/v1/user", () => {
         id: createUser.id,
         username: "userWithSessionToExpire",
         email: createUser.email,
-        password: createUser.password,
+        features: ["create:session", "read:session", "update:user"],
         create_at: createUser.create_at.toISOString(),
-        updated_at: createUser.updated_at.toISOString(),
+        updated_at: activateUser.updated_at.toISOString(),
       });
 
       expect(uuidVersion(responseBody2.id)).toBe(4);
