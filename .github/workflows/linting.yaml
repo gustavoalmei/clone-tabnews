@@ -9,8 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4 # faz o checkout do código
       - uses: actions/setup-node@v4 # configura o node
-        with:
-          node-version: "lts/hydrogen" # versão do node
+        with: node-version-file: "package.json" # versão do node
       - run: npm ci # instala as dependências
       # o npm ci ira instalar nas mesmas versões que estão no package-lock.json,
       # já o npm install ira instalar as versões mais recentes dentro do range de versões definido no package.json
@@ -21,8 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4 # faz o checkout do código
       - uses: actions/setup-node@v4 # configura o node
-        with:
-          node-version: "lts/hydrogen" # versão do node
+        with: node-version-file: "package.json" # versão do node
       - run: npm ci # instala as dependências
       # o npm ci ira instalar nas mesmas versões que estão no package-lock.json,
       # já o npm install ira instalar as versões mais recentes dentro do range de versões definido no package.json
@@ -35,8 +33,7 @@ jobs:
         with:
           fetch-depth: 0 # faz o checkout de todos os commits
       - uses: actions/setup-node@v4 # configura o node
-        with:
-          node-version: "lts/hydrogen" # versão do node
+        with: node-version-file: "package.json" # versão do node
       - run: npm ci # instala as dependências
       # o npm ci ira instalar nas mesmas versões que estão no package-lock.json,
       # já o npm install ira instalar as versões mais recentes dentro do range de versões definido no package.json
