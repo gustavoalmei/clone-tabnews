@@ -84,7 +84,7 @@ async function markAsUsed(tokenId) {
 
 async function sendEmailToUser(user, activationToken) {
   await email.send({
-    from: "Fininfo <fininfo@tabnews.com>",
+    from: "Fininfo <fininfo@fininfos.com.br>",
     to: user.email,
     subject: "Ative seu cadastro na Fininfo",
     text: `Olá ${user.username}, clique no link abaixo para ativar a sua conta:
