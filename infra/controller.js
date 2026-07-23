@@ -38,7 +38,7 @@ function onErrorHandler(error, req, res) {
   res.status(publicErrorObject.statusCode).json(publicErrorObject);
 }
 
-async function setSessionCookie(res, sessionToken) {
+function setSessionCookie(res, sessionToken) {
   const setCookie = cookie.serialize("session_id", sessionToken, {
     path: "/", // informa qual caminho pode ter acesso ao cookie ( nesse caso todas as rotas)
     // expires: new Date(newSession.expires_at), // informa a data de expiração
@@ -48,7 +48,7 @@ async function setSessionCookie(res, sessionToken) {
   });
   res.setHeader("Set-Cookie", setCookie);
 }
-async function clearSessionCookie(res) {
+function clearSessionCookie(res) {
   const setCookie = cookie.serialize("session_id", "invalid", {
     path: "/", // informa qual caminho pode ter acesso ao cookie ( nesse caso todas as rotas)
     // expires: new Date(newSession.expires_at), // informa a data de expiração
