@@ -11,12 +11,9 @@ describe("POST /api/v1/migrations", () => {
   describe("Anonymous user", () => {
     describe("Running pending migrations", () => {
       test("Running pending migrations", async () => {
-        const response = await fetch(
-          `${webServer.origin}/api/v1/migrations `,
-          {
-            method: "POST",
-          },
-        );
+        const response = await fetch(`${webServer.origin}/api/v1/migrations `, {
+          method: "POST",
+        });
 
         expect(response.status).toBe(403);
         const responseBody = await response.json();
@@ -37,15 +34,12 @@ describe("POST /api/v1/migrations", () => {
         const createdUser = await orchestrator.createUser();
         const activatedUser = await orchestrator.activateUser(createdUser);
         const sessionUser = await orchestrator.createSession(activatedUser);
-        const response = await fetch(
-          `${webServer.origin}/api/v1/migrations`,
-          {
-            method: "POST",
-            headers: {
-              Cookie: `session_id=${sessionUser.token}`,
-            },
+        const response = await fetch(`${webServer.origin}/api/v1/migrations`, {
+          method: "POST",
+          headers: {
+            Cookie: `session_id=${sessionUser.token}`,
           },
-        );
+        });
 
         expect(response.status).toBe(403);
         const responseBody = await response.json();
@@ -68,15 +62,12 @@ describe("POST /api/v1/migrations", () => {
         await orchestrator.addFeaturesToUser(createdUser, ["create:migration"]);
         const sessionUser = await orchestrator.createSession(activatedUser);
 
-        const response2 = await fetch(
-          `${webServer.origin}/api/v1/migrations`,
-          {
-            method: "POST",
-            headers: {
-              Cookie: `session_id=${sessionUser.token}`,
-            },
+        const response2 = await fetch(`${webServer.origin}/api/v1/migrations`, {
+          method: "POST",
+          headers: {
+            Cookie: `session_id=${sessionUser.token}`,
           },
-        );
+        });
 
         expect(response2.status).toBe(200);
         const responseBody2 = await response2.json();

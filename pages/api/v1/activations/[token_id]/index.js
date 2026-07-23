@@ -3,11 +3,10 @@ import controller from "infra/controller";
 import activation from "models/activation";
 import authorization from "infra/authorization";
 
-
 export default createRouter()
   .use(controller.injectAnonymousOrUser)
   .patch(controller.canRequest("read:activation_token"), patchHandler)
-  .handler(controller.errorHandlers)
+  .handler(controller.errorHandlers);
 
 async function patchHandler(req, res) {
   const tokenId = req.query.token_id;

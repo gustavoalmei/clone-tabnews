@@ -243,7 +243,8 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.create_at).toBe(true);
 
       const userInDatabase = await user.findOneByUsername(
-        responseBody.username)
+        responseBody.username,
+      );
       expect(userInDatabase.email).toBe("uniqueEmail2@user.com");
     });
 

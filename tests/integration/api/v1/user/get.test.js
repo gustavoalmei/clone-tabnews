@@ -86,7 +86,7 @@ describe("GET /api/v1/user", () => {
         value: sessionObject.token,
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
         path: "/",
-        "sameSite": "Lax",
+        sameSite: "Lax",
         httpOnly: true,
       });
     });
@@ -199,7 +199,7 @@ describe("GET /api/v1/user", () => {
         value: sessionObject.token,
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
         path: "/",
-        "sameSite": "Lax",
+        sameSite: "Lax",
         httpOnly: true,
       });
     });
