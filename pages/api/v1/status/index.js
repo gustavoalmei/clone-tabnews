@@ -3,12 +3,10 @@ import database from "infra/database";
 import controller from "infra/controller";
 import authorization from "infra/authorization";
 
-const router = createRouter();
-
-router.use(controller.injectAnonymousOrUser);
-router.get(getHandler);
-
-export default router.handler(controller.errorHandlers);
+export default createRouter()
+  .use(controller.injectAnonymousOrUser)
+  .get(getHandler)
+  .handler(controller.errorHandlers);
 
 async function getHandler(req, res) {
   const updatedAt = new Date().toISOString();
@@ -36,5 +34,5 @@ async function getHandler(req, res) {
       openedConectionsPostgresValue,
     },
   );
-  res.status(200).json(outputSecure);
+  return res.status(200).json(outputSecure);
 }
