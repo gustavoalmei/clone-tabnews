@@ -36,5 +36,5 @@ async function getHandler(req, res) {
       openedConectionsPostgresValue,
     },
   );
-  res.status(200).json(outputSecure);
+  return res.status(200).json(outputSecure);
 }
