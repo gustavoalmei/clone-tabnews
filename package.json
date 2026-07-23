@@ -38,10 +38,10 @@
     "uuid": "11.1.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.4.0",
-    "@commitlint/config-conventional": "19.2.2",
+    "@commitlint/cli": "21.2.1",
+    "@commitlint/config-conventional": "21.2.0",
     "@faker-js/faker": "9.7.0",
-    "@secretlint/secretlint-rule-preset-recommend": "11.7.1",
+    "@secretlint/secretlint-rule-preset-recommend": "13.0.4",
     "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.5.4",
     "commitizen": "4.3.2",
