@@ -45,6 +45,7 @@ function setSessionCookie(res, sessionToken) {
     maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000, // informa o tempo de expiração em milisegundos
     secure: process.env.NODE_ENV === "production", // informa se o cookie deve ser enviado apenas em requisições HTTPS
     httpOnly: true, // informa se o cookie deve ser enviado apenas em requisições HTTP, um código JS não poderá acessar o cookie
+    sameSite: "lax",
   });
   res.setHeader("Set-Cookie", setCookie);
 }
