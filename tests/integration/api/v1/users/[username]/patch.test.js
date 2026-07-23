@@ -60,7 +60,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'username'", async () => {
+    test("With duplicated `username`", async () => {
       await orchestrator.createUser({
         username: "user1",
       });
@@ -95,7 +95,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With 'userB' target 'userA", async () => {
+    test("With `userB` target `userA", async () => {
       const createdUser1 = await orchestrator.createUser({
         username: "userA",
       });
@@ -131,7 +131,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'email'", async () => {
+    test("With duplicated `email`", async () => {
       await orchestrator.createUser({
         email: "email1@email.com",
       });
@@ -166,7 +166,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With unique 'username'", async () => {
+    test("With unique `username`", async () => {
       const createdUser = await orchestrator.createUser();
       const activatedUser = await orchestrator.activateUser(createdUser);
       const sessionUser = await orchestrator.createSession(activatedUser.id);
@@ -203,7 +203,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.create_at).toBe(true);
     });
 
-    test("With unique 'email'", async () => {
+    test("With unique `email`", async () => {
       const createdUser = await orchestrator.createUser({
         email: "uniqueEmail1@user.com",
       });
@@ -242,7 +242,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.create_at).toBe(true);
     });
 
-    test("With new 'password'", async () => {
+    test("With new `password`", async () => {
       const createdUser = await orchestrator.createUser({
         password: "password123",
       });
@@ -296,7 +296,7 @@ describe("PATCH /api/v1/users/[username]", () => {
   });
 
   describe("Previleged user", () => {
-    test("With 'update:user:ohers' target 'defaultUser", async () => {
+    test("With `update:user:ohers` target `defaultUser", async () => {
       const previlegedUser = await orchestrator.createUser();
       const activatedPrevilegedUser =
         await orchestrator.activateUser(previlegedUser);
