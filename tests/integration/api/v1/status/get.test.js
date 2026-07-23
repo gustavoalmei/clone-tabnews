@@ -7,7 +7,7 @@ beforeAll(async () => {
 
 describe("GET /api/v1/status", () => {
   describe("Anonymous user", () => {
-    test("Retrieving current system status", async () => {
+    test("Running current system status", async () => {
       const response = await fetch(`${webServer.origin}/api/v1/status`);
 
       expect(response.status).toBe(200);
@@ -23,7 +23,7 @@ describe("GET /api/v1/status", () => {
   });
 
   describe("Default user", () => {
-    test("Retrieving current system status", async () => {
+    test("Running current system status", async () => {
       const response = await fetch(`${webServer.origin}/api/v1/status`);
 
       expect(response.status).toBe(200);
@@ -39,7 +39,7 @@ describe("GET /api/v1/status", () => {
   });
 
   describe("Previleged user", () => {
-    test("Retrieving current system status", async () => {
+    test("Running current system status", async () => {
       const userPrivileged = await orchestrator.createUser();
       await orchestrator.activateUser(userPrivileged);
       await orchestrator.addFeaturesToUser(userPrivileged, ["read:status:all"]);
