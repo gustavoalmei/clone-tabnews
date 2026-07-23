@@ -1,6 +1,7 @@
 import orchestrator from "tests/orchestrator";
 import activation from "models/activation";
 import user from "models/user";
+import webServer from "infra/webServer";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -15,7 +16,7 @@ describe("Use case: Registration flow (All successful)", () => {
   let userObjectSession;
 
   test("Create user account", async () => {
-    const response = await fetch("http://localhost:3000/api/v1/users", {
+    const response = await fetch(`${webServer.origin}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +57,7 @@ describe("Use case: Registration flow (All successful)", () => {
 
   test("Active account", async () => {
     const activateUser = await fetch(
-      `http://localhost:3000/api/v1/activations/${foundUserBasedOnToken.id}`,
+      `${webServer.origin}/api/v1/activations/${foundUserBasedOnToken.id}`,
       { method: "PATCH" },
     );
 
@@ -76,7 +77,7 @@ describe("Use case: Registration flow (All successful)", () => {
   });
 
   test("Login", async () => {
-    const request = await fetch("http://localhost:3000/api/v1/sessions", {
+    const request = await fetch(`${webServer.origin}/api/v1/sessions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +95,7 @@ describe("Use case: Registration flow (All successful)", () => {
   });
 
   test("Get user information", async () => {
-    const response = await fetch("http://localhost:3000/api/v1/user", {
+    const response = await fetch(`${webServer.origin}/api/v1/user`, {
       headers: {
         "Content-Type": "application/json",
         cookie: `session_id = ${userObjectSession.token}`,

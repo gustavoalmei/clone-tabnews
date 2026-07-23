@@ -1,3 +1,4 @@
+import webServer from "infra/webServer";
 import orchestrator from "tests/orchestrator";
 
 beforeAll(async () => {
@@ -11,7 +12,7 @@ describe("POST /api/v1/migrations", () => {
     describe("Running pending migrations", () => {
       test("Running pending migrations", async () => {
         const response = await fetch(
-          "http://localhost:3000/api/v1/migrations",
+          `${webServer.origin}/api/v1/migrations `,
           {
             method: "POST",
           },
@@ -37,7 +38,7 @@ describe("POST /api/v1/migrations", () => {
         const activatedUser = await orchestrator.activateUser(createdUser);
         const sessionUser = await orchestrator.createSession(activatedUser.id);
         const response = await fetch(
-          "http://localhost:3000/api/v1/migrations",
+          `${webServer.origin}/api/v1/migrations`,
           {
             method: "POST",
             headers: {
@@ -68,7 +69,7 @@ describe("POST /api/v1/migrations", () => {
         const sessionUser = await orchestrator.createSession(activatedUser.id);
 
         const response2 = await fetch(
-          "http://localhost:3000/api/v1/migrations",
+          `${webServer.origin}/api/v1/migrations`,
           {
             method: "POST",
             headers: {

@@ -1,3 +1,4 @@
+import webServer from "infra/webServer";
 import orchestrator from "tests/orchestrator";
 
 beforeAll(async () => {
@@ -7,7 +8,7 @@ beforeAll(async () => {
 describe("GET /api/v1/status", () => {
   describe("Anonymous user", () => {
     test("Retrieving current system status", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/status");
+      const response = await fetch(`${webServer.origin}/api/v1/status`);
 
       expect(response.status).toBe(200);
 
@@ -23,7 +24,7 @@ describe("GET /api/v1/status", () => {
 
   describe("Default user", () => {
     test("Retrieving current system status", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/status");
+      const response = await fetch(`${webServer.origin}/api/v1/status`);
 
       expect(response.status).toBe(200);
 
@@ -46,7 +47,7 @@ describe("GET /api/v1/status", () => {
         userPrivileged.id,
       );
 
-      const response = await fetch("http://localhost:3000/api/v1/status", {
+      const response = await fetch(`${webServer.origin}/api/v1/status`, {
         headers: {
           Cookie: `session_id=${userPrivilegedSession.token}`,
         },

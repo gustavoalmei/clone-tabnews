@@ -1,3 +1,4 @@
+import webServer from "infra/webServer";
 import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
 
@@ -17,7 +18,7 @@ describe("GET /api/v1/users/[username]", () => {
       });
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/MesmoCase",
+        `${webServer.origin}/api/v1/users/MesmoCase`,
         {
           method: "GET",
           headers: {
@@ -48,7 +49,7 @@ describe("GET /api/v1/users/[username]", () => {
       });
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/casediferente",
+        `${webServer.origin}/api/v1/users/casediferente`,
         {
           method: "GET",
           headers: {
@@ -73,7 +74,7 @@ describe("GET /api/v1/users/[username]", () => {
     });
     test("With nonexistent username", async () => {
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/usuarioInexistente",
+        `${webServer.origin}/api/v1/users/usuarioInexistente`,
         {
           method: "GET",
           headers: {

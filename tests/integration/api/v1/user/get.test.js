@@ -2,6 +2,7 @@ import session from "models/session";
 import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
 import setCookieParser from "set-cookie-parser";
+import webServer from "infra/webServer";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -12,7 +13,7 @@ beforeAll(async () => {
 describe("GET /api/v1/user", () => {
   describe("Anonymous user", () => {
     test("With valid session", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/user");
+      const response = await fetch(`${webServer.origin}/api/v1/user`);
 
       expect(response.status).toBe(403);
 
@@ -37,7 +38,7 @@ describe("GET /api/v1/user", () => {
 
       const activateUser = await orchestrator.activateUser(createUser);
 
-      const response2 = await fetch("http://localhost:3000/api/v1/user", {
+      const response2 = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
         },
@@ -90,7 +91,7 @@ describe("GET /api/v1/user", () => {
     });
 
     test("With noexistent session", async () => {
-      const response2 = await fetch("http://localhost:3000/api/v1/user", {
+      const response2 = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=7ffb3ff2-bafc-4768-b98d-9972eacb6747`,
         },
@@ -120,7 +121,7 @@ describe("GET /api/v1/user", () => {
 
       jest.useRealTimers();
 
-      const response2 = await fetch("http://localhost:3000/api/v1/user", {
+      const response2 = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
         },
@@ -154,7 +155,7 @@ describe("GET /api/v1/user", () => {
 
       jest.useRealTimers();
 
-      const response2 = await fetch("http://localhost:3000/api/v1/user", {
+      const response2 = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
         },
