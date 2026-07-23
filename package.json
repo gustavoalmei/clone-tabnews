@@ -60,7 +60,7 @@
     "postcss": "^8.5.22",
     "prettier": "3.9.6",
     "secretlint": "11.7.1",
-    "set-cookie-parser": "2.7.1",
+    "set-cookie-parser": "3.1.2",
     "tailwindcss": "^4.3.3"
   },
   "config": {
