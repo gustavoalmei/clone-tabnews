@@ -4,12 +4,10 @@ import user from "models/user.js";
 import activation from "models/activation.js";
 import authorization from "infra/authorization";
 
-const router = createRouter();
-
-router.use(controller.injectAnonymousOrUser);
-router.post(controller.canRequest("create:user"), postHandler);
-
-export default router.handler(controller.errorHandlers);
+export default createRouter()
+  .use(controller.injectAnonymousOrUser)
+  .post(controller.canRequest("create:user"), postHandler)
+  .handler(controller.errorHandlers);
 
 async function postHandler(req, res) {
   const userInputValues = req.body;
