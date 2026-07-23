@@ -45,7 +45,7 @@
     "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.5.4",
     "commitizen": "4.3.2",
-    "concurrently": "8.2.2",
+    "concurrently": "10.0.3",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "16.4.5",
     "dotenv-expand": "11.0.6",
